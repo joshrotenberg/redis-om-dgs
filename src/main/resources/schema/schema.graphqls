@@ -1,0 +1,66 @@
+scalar JSON
+
+"Custom Annotation"
+directive @annotate(
+    name: String!
+    type: String
+    inputs: JSON
+    target: String
+) repeatable on OBJECT | FIELD_DEFINITION | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+type Point {
+    x: Float
+    y: Float
+}
+
+input GeoFilter {
+    x: Float
+    y: Float
+    distance: Int
+}
+
+input StringFilter {
+    startsWith: String
+    endsWith: String
+}
+
+input IntFilter {
+    eq: Int
+    gt: Int
+    lt: Int
+}
+
+input Filter {
+    modelYear: IntFilter
+    electricRange: IntFilter
+    make: StringFilter
+    model: StringFilter
+    county: StringFilter
+    city: StringFilter
+    near: GeoFilter
+}
+
+type Query {
+    vehicles(filter: Filter): [Vehicle]
+}
+
+type Vehicle @annotate(name: "com.redis.om.spring.annotations.Document") {
+    id: String @annotate(name: "org.springframework.data.annotation.Id")
+    vin: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    county: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    city: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    state: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    postalCode: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    modelYear: Int! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    make: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    model: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    electricVehicleType: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    cleanAlternativeFuelVehicleEligibility: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    electricRange: Int! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    baseMsrp: Int! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    legislativeDistrict: String @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    dolVehicleId: Int! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    vehicleLocation: Point! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    electricUtility: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+    censusTract: String! @annotate(name: "com.redis.om.spring.annotations.Indexed")
+}
