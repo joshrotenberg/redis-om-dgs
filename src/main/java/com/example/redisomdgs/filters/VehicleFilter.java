@@ -63,8 +63,6 @@ public class VehicleFilter {
             if (filter.getModel() != null) {
                 applyStringFilter(stream, Vehicle$.MODEL, filter.getModel());
             }
-
-
         }
     }
 }

@@ -74,6 +74,7 @@ public class RedisOmDgsApplication {
         return args -> {
 
             vehicleRepository.deleteAll();
+
             log.info("Parsing " + vehiclesCsv);
             Reader in = new FileReader(vehiclesCsv);
             Iterable<CSVRecord> records = CSVFormat.RFC4180.builder().setHeader().setSkipHeaderRecord(true)

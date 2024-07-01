@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class VehicleDataFetcher {
 
     @Autowired
-    private EntityStream entityStream;
+    EntityStream entityStream;
 
     @DgsQuery
     public List<Vehicle> vehicles(@InputArgument Filter filter) {
