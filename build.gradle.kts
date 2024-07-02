@@ -23,6 +23,7 @@ repositories {
 extra["netflixDgsVersion"] = "9.0.0"
 
 dependencies {
+    // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     // DGS
@@ -37,8 +38,14 @@ dependencies {
     implementation("com.google.guava:guava:33.2.1-jre")
     implementation("org.apache.commons:commons-csv:1.11.0")
 
+    // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // testcontainers
+    testImplementation("org.testcontainers:testcontainers:1.19.8")
+    testImplementation("org.testcontainers:junit-jupiter:1.19.8")
+    testImplementation("com.redis:testcontainers-redis:2.2.2")
 }
 
 dependencyManagement {
