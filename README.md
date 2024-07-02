@@ -13,21 +13,28 @@ docker-compose up
 ./gradlew bootRun
 ```
 
+Naviagte
 Navigate to [http://localhost:8080/graphiql](http://localhost:8080/graphiql) to interact with the GraphQL API. See the
 example queries below to get started. You can also interact with the Redis OM repository directly by using the Redis Ins
 
 ## Interesting parts
 
-- [schema.graphqls](src/main/resources/schema.graphqls) - The GraphQL schema that defines the API. Using this schema,
-  DGS generates the necessary classes to interact with the API. All of the annotations needed for Redis OM piggyback
-  here
-  so we don't need to write any additional code.
+- [schema.graphqls](src/main/resources/schema/schema.graphqls) - The GraphQL schema that defines the API. Using this
+  schema,
+  DGS generates the necessary classes to interact with the API. All of the necessary annotations for RedisOM can be
+- added in the GraphQL schema which lets the models be entirely generated.
 
-- [VehicleRepository](src/main/java/com/example/redisomdemo/VehicleRepository.java) - The repository that interacts with
+- [VehicleRepository](src/main/java/com/example/redisomdemo/repositories/VehicleRepository.java) - The repository that
+  interacts with
   Redis OM. This only gets used to store the data from the parsed CSV file; we use Redis OM to interact with the data.
 
-- [VehicleDataFetcher](src/main/java/com/example/redisomdemo/VehicleDataFetcher.java) - The data fetcher that retrieves
+- [VehicleDataFetcher](src/main/java/com/example/redisomdemo/datafetchers/VehicleDataFetcher.java) - The data fetcher
+  that retrieves
   data from Redis OM. This uses the `EntityStream` class to build the query and return the results.
+
+- [VehicleFilter](src/main/java/com/example/redisomdemo/filters/VehicleFilter.java) - The filter class that is used to
+  filter
+  vehicles based on the query. This is used in the `VehicleDataFetcher` to filter the results.
 
 ## Example Queries
 
