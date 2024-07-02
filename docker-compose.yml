@@ -6,13 +6,3 @@ services:
       - 8001:8001
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: app
-    depends_on:
-      - redis
-    ports:
-      - 8080:8080
