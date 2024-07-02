@@ -8,21 +8,21 @@ with a [GraphQL](https://graphql.org/) front end.
 
 ```shell
 # Start redis 
-docker-compose up 
+docker-compose up -d
+
 # Run the project
 ./gradlew bootRun
 ```
 
-Naviagte
-Navigate to [http://localhost:8080/graphiql](http://localhost:8080/graphiql) to interact with the GraphQL API. See the
-example queries below to get started. You can also interact with the Redis OM repository directly by using the Redis Ins
+Naviagte to <http://localhost:8001/> to see the RedisInsight dashboard, and <http://localhost:8080/graphiql> to interact
+with the GraphQL API. See the example queries below to get started.
 
 ## Interesting parts
 
 - [schema.graphqls](src/main/resources/schema/schema.graphqls) - The GraphQL schema that defines the API. Using this
   schema,
   DGS generates the necessary classes to interact with the API. All of the necessary annotations for RedisOM can be
-- added in the GraphQL schema which lets the models be entirely generated.
+  added in the GraphQL schema which lets the models be entirely generated.
 
 - [VehicleRepository](src/main/java/com/example/redisomdgs/repositories/VehicleRepository.java) - The repository that
   interacts with
