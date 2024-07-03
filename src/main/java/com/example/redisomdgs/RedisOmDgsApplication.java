@@ -18,26 +18,62 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 @SpringBootApplication
 @EnableRedisDocumentRepositories(basePackages = "com.example.redisomdgs.*")
 public class RedisOmDgsApplication {
     private static final Logger log = Logger.getLogger(RedisOmDgsApplication.class.getName());
 
-    private final VehicleRepository vehicleRepository;
-
     public RedisOmDgsApplication(VehicleRepository vehicleRepository) {
         this.vehicleRepository = vehicleRepository;
     }
 
+    @Value("${vehicles.import.max:0}")
+    private int maxVehicles;
+
+    private final VehicleRepository vehicleRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(RedisOmDgsApplication.class, args);
+    }
+
+    @Bean
+    CommandLineRunner loadData(@Value("classpath:/data/Electric_Vehicle_Population_Data.csv") File vehiclesCsv) {
+        return args -> {
+
+            // start with a fresh dataset each time
+            vehicleRepository.deleteAll();
+
+            log.info("Parsing " + vehiclesCsv);
+
+            // parse the csv file
+            Reader in = new FileReader(vehiclesCsv);
+            Iterable<CSVRecord> records = CSVFormat.RFC4180.builder().setHeader().setSkipHeaderRecord(true)
+                    .build()
+                    .parse(in);
+
+            // and get a stream of records
+            Stream<CSVRecord> stream = Streams.stream(records);
+            if (maxVehicles > 0) {
+                log.info("Limiting to " + maxVehicles + " vehicles");
+                stream = stream.limit(maxVehicles);
+            }
+
+            // convert the records to vehicles
+            List<Vehicle> vehicles = stream.map(RedisOmDgsApplication::fromCsv)
+                    .toList();
+
+            log.info("Saving " + vehicles.size() + " vehicles");
+            vehicleRepository.saveAll(vehicles);
+        };
     }
 
     private static Point fromCsvPoint(String csvPoint) {
         String point = csvPoint.replace("POINT (", "").replace(")", "").trim();
         String[] coordinates = point.split(" ");
 
+        // a few records are missing the point, just return 0.0
         if (coordinates[0].isBlank() || coordinates[1].isBlank()) {
             log.warning("Invalid point for row");
             return new Point(0.0, 0.0);
@@ -69,23 +105,4 @@ public class RedisOmDgsApplication {
         return vehicle;
     }
 
-    @Bean
-    CommandLineRunner loadData(@Value("classpath:/data/Electric_Vehicle_Population_Data.csv") File vehiclesCsv) {
-        return args -> {
-
-            vehicleRepository.deleteAll();
-
-            log.info("Parsing " + vehiclesCsv);
-            Reader in = new FileReader(vehiclesCsv);
-            Iterable<CSVRecord> records = CSVFormat.RFC4180.builder().setHeader().setSkipHeaderRecord(true)
-                    .build()
-                    .parse(in);
-            List<Vehicle> vehicles = Streams.stream(records)
-                    .map(RedisOmDgsApplication::fromCsv)
-                    .toList();
-
-            log.info("Saving " + vehicles.size() + " vehicles");
-            vehicleRepository.saveAll(vehicles);
-        };
-    }
 }
