@@ -34,17 +34,17 @@ with the GraphQL API. See the example queries below to get started.
 - [VehicleFilter](src/main/java/com/example/redisomdgs/filters/VehicleFilter.java) - The filter class that is used to
   filter vehicles based on the query. This is used in the `VehicleDataFetcher` to filter the results.
 
-## Index
+## Index creation and Example Queries
 
-Using RedisInsight's profiler (or `redis-cli monitor`), we can see the index that is created for the `Vehicle` type.
+Using RedisInsight's profiler (or `redis-cli monitor`), we can see the index that is created for the `Vehicle` type with
+[FT.CREATE](https://redis.io/docs/latest/commands/ft.create/).
 
 ```redis
 "FT.CREATE" "com.example.redisomdgs.codegen.types.VehicleIdx" "ON" "JSON" "PREFIX" "1" "com.example.redisomdgs.codegen.types.Vehicle:" "LANGUAGE" "english" "SCORE" "1.0" "SCHEMA" "$.vin" "AS" "vin" "TAG" "SEPARATOR" "|" "$.county" "AS" "county" "TAG" "SEPARATOR" "|" "$.city" "AS" "city" "TAG" "SEPARATOR" "|" "$.state" "AS" "state" "TAG" "SEPARATOR" "|" "$.postalCode" "AS" "postalCode" "TAG" "SEPARATOR" "|" "$.modelYear" "AS" "modelYear" "NUMERIC" "$.make" "AS" "make" "TAG" "SEPARATOR" "|" "$.model" "AS" "model" "TAG" "SEPARATOR" "|" "$.electricVehicleType" "AS" "electricVehicleType" "TAG" "SEPARATOR" "|" "$.cleanAlternativeFuelVehicleEligibility" "AS" "cleanAlternativeFuelVehicleEligibility" "TAG" "SEPARATOR" "|" "$.electricRange" "AS" "electricRange" "NUMERIC" "$.baseMsrp" "AS" "baseMsrp" "NUMERIC" "$.legislativeDistrict" "AS" "legislativeDistrict" "TAG" "SEPARATOR" "|" "$.dolVehicleId" "AS" "dolVehicleId" "NUMERIC" "$.vehicleLocation" "AS" "vehicleLocation" "GEO" "$.electricUtility" "AS" "electricUtility" "TAG" "SEPARATOR" "|" "$.censusTract" "AS" "censusTract" "TAG" "SEPARATOR" "|" "$.id" "AS" "id" "TAG" "SEPARATOR" "|"
 ```
 
-## Example Queries
-
-The above tool(s) also let us see how Redis OM turns our GraphQL queries into Redis commands:
+We also get a very clear mapping between GraphQL and calls
+to [FT.SEARCH](https://redis.io/docs/latest/commands/ft.search/).
 
 ### Get everything
 
