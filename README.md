@@ -38,7 +38,7 @@ with the GraphQL API. See the example queries below to get started.
 
 Using RedisInsight's profiler (or `redis-cli monitor`), we can see the index that is created for the `Vehicle` type.
 
-```shell
+```redis
 "FT.CREATE" "com.example.redisomdgs.codegen.types.VehicleIdx" "ON" "JSON" "PREFIX" "1" "com.example.redisomdgs.codegen.types.Vehicle:" "LANGUAGE" "english" "SCORE" "1.0" "SCHEMA" "$.vin" "AS" "vin" "TAG" "SEPARATOR" "|" "$.county" "AS" "county" "TAG" "SEPARATOR" "|" "$.city" "AS" "city" "TAG" "SEPARATOR" "|" "$.state" "AS" "state" "TAG" "SEPARATOR" "|" "$.postalCode" "AS" "postalCode" "TAG" "SEPARATOR" "|" "$.modelYear" "AS" "modelYear" "NUMERIC" "$.make" "AS" "make" "TAG" "SEPARATOR" "|" "$.model" "AS" "model" "TAG" "SEPARATOR" "|" "$.electricVehicleType" "AS" "electricVehicleType" "TAG" "SEPARATOR" "|" "$.cleanAlternativeFuelVehicleEligibility" "AS" "cleanAlternativeFuelVehicleEligibility" "TAG" "SEPARATOR" "|" "$.electricRange" "AS" "electricRange" "NUMERIC" "$.baseMsrp" "AS" "baseMsrp" "NUMERIC" "$.legislativeDistrict" "AS" "legislativeDistrict" "TAG" "SEPARATOR" "|" "$.dolVehicleId" "AS" "dolVehicleId" "NUMERIC" "$.vehicleLocation" "AS" "vehicleLocation" "GEO" "$.electricUtility" "AS" "electricUtility" "TAG" "SEPARATOR" "|" "$.censusTract" "AS" "censusTract" "TAG" "SEPARATOR" "|" "$.id" "AS" "id" "TAG" "SEPARATOR" "|"
 ```
 
@@ -51,8 +51,6 @@ The above tool(s) also let us see how Redis OM turns our GraphQL queries into Re
 With no filter, we can see all the vehicles in the database. The resulting query just asks for `"*"`.
 
 ```graphql
-# "FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "*" "LIMIT" "0" "10000" "DIALECT" "1"
-
 {
     vehicles {
         model
@@ -61,10 +59,13 @@ With no filter, we can see all the vehicles in the database. The resulting query
 }
 ```
 
+```redis
+"FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "*" "LIMIT" "0" "10000" "DIALECT" "1"
+```
+
 ### Find all the Chevy Bolts
 
 ```graphql
-# "FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "(( @make:{chev*}) @model:{bo*})" "LIMIT" "0" "10000" "DIALECT" "1"
 
 {
     vehicles(filter: {make: {startsWith: "chev"} model: {startsWith: "bo"}} ) {
@@ -76,10 +77,13 @@ With no filter, we can see all the vehicles in the database. The resulting query
 }
 ```
 
+```redis
+"FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "(( @make:{chev*}) @model:{bo*})" "LIMIT" "0" "10000" "DIALECT" "1"
+```
+
 ### Use geo search
 
 ```graphql
-# "FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "((( @vehicleLocation:[-122.3016563 47.5858977 5.0 m]) @make:{nissan*}) @model:{ar*})" "LIMIT" "0" "10000" "DIALECT" "1"
 
 {
     vehicles(
@@ -95,6 +99,10 @@ With no filter, we can see all the vehicles in the database. The resulting query
         }
     }
 }
+```
+
+```redis
+"FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "((( @vehicleLocation:[-122.3016563 47.5858977 5.0 m]) @make:{nissan*}) @model:{ar*})" "LIMIT" "0" "10000" "DIALECT" "1"
 ```
 
 ## Implementation notes
