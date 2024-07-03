@@ -87,7 +87,10 @@ With no filter, we can see all the vehicles in the database. The resulting query
 
 {
     vehicles(
-        filter: {make: {startsWith: "nissan"}, model: {startsWith: "ar"}, near: {x: -122.3016563, y: 47.5858977, distance: 5}}
+        filter: {
+            make: {startsWith: "nissan"},
+            model: {startsWith: "ar"},
+            near: {x: -122.3016563, y: 47.5858977, distance: 5}}
     ) {
         make
         model
