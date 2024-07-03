@@ -1,8 +1,10 @@
 # Redis OM on Netflix DGS
 
 This is a small project to demonstrate how to use [Redis OM](https://github.com/redis/redis-om-spring) with the Netflix
-[DGS Framework](https://netflix.github.io/dgs/) to stitch a [Redis JSON](https://github.com/RedisJSON/RedisJSON) backend
-with a [GraphQL](https://graphql.org/) front end. It uses a data set of electric vehicles from
+[DGS Framework](https://netflix.github.io/dgs/) to stitch together
+a [Redis JSON](https://github.com/RedisJSON/RedisJSON) backend
+with a [GraphQL](https://graphql.org/) front end. It uses a data set of electric vehicle information from the Washington
+State Department of Licensing (DOL):
 <https://catalog.data.gov/dataset/electric-vehicle-population-data>.
 
 ## Running the project
@@ -143,5 +145,5 @@ in memory caching in your application as well with a combination
 of [Data Loaders](https://netflix.github.io/dgs/data-loaders) to fetch and cache data in the application
 and only use `EntityStream` for the search capabilities.
 
-This demo only uses a small subset of DGS features. See the official [documention](https://netflix.github.io/dgs/)
+This demo only uses a small subset of DGS features. See the official [documentation](https://netflix.github.io/dgs/)
 for more.
