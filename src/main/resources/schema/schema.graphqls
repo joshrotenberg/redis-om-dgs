@@ -13,6 +13,11 @@ type Point {
     y: Float
 }
 
+input PointInput {
+    x: Float
+    y: Float
+}
+
 input GeoFilter {
     x: Float
     y: Float
@@ -42,6 +47,10 @@ input Filter {
 
 type Query {
     vehicles(filter: Filter): [Vehicle]
+}
+
+type Mutation {
+    updateVehicleLocation(vin: String!, location: PointInput!): Vehicle
 }
 
 type Vehicle @annotate(name: "com.redis.om.spring.annotations.Document") {
