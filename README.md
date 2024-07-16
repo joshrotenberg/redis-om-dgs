@@ -61,6 +61,8 @@ With no filter, we can see all the vehicles in the database. The resulting query
 }
 ```
 
+This results in the following Redis query:
+
 ```redis
 "FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "*" "LIMIT" "0" "10000" "DIALECT" "1"
 ```
@@ -78,6 +80,8 @@ With no filter, we can see all the vehicles in the database. The resulting query
     }
 }
 ```
+
+And the resulting Redis query:
 
 ```redis
 "FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "(( @make:{chev*}) @model:{bo*})" "LIMIT" "0" "10000" "DIALECT" "1"
@@ -105,6 +109,8 @@ With no filter, we can see all the vehicles in the database. The resulting query
     }
 }
 ```
+
+And, finally, the Redis query:
 
 ```redis
 "FT.SEARCH" "com.example.redisomdgs.codegen.types.VehicleIdx" "((( @vehicleLocation:[-122.3016563 47.5858977 5.0 m]) @make:{nissan*}) @model:{ar*})" "LIMIT" "0" "10000" "DIALECT" "1"
