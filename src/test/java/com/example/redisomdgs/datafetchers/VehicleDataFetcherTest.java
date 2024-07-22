@@ -1,14 +1,16 @@
 package com.example.redisomdgs.datafetchers;
 
-import com.example.redisomdgs.codegen.types.Vehicle;
 import com.netflix.graphql.dgs.DgsQueryExecutor;
 import com.netflix.graphql.dgs.client.GraphQLResponse;
 import com.netflix.graphql.dgs.client.MonoGraphQLClient;
 import com.redis.testcontainers.RedisStackContainer;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -30,6 +32,12 @@ class VehicleDataFetcherTest {
 
     final MonoGraphQLClient monoGraphQLClient;
 
+    @DynamicPropertySource
+    static void registerPgProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.redis.host", container::getRedisHost);
+        registry.add("spring.data.redis.port", container::getRedisPort);
+    }
+
     VehicleDataFetcherTest(@LocalServerPort Integer port) {
         WebClient webClient = WebClient.create("http://localhost:" + port.toString() + "/graphql");
         this.monoGraphQLClient = MonoGraphQLClient.createWithWebClient(webClient);
@@ -37,20 +45,21 @@ class VehicleDataFetcherTest {
 
     @Test
     void vehicles() {
-        String vehicleQuery = "{ vehicles { vin make model } }";
+        @Language("GraphQL") String vehicleQuery = "{ vehicles { vin make model } }";
 
-        List<Vehicle> result = dgsQueryExecutor.executeAndExtractJsonPathAsObject(vehicleQuery, "data.vehicles[*]", List.class);
+        List result = dgsQueryExecutor.executeAndExtractJsonPathAsObject(vehicleQuery, "data.vehicles[*]", List.class);
         assertThat(result.size()).isNotZero();
     }
 
     @Test
     void vehiclesWeb() {
-        String vehicleQuery = "{ vehicles { vin make model } }";
+        @Language("graphql") String vehicleQuery = "{ vehicles { vin make model } }";
 
         GraphQLResponse response =
                 monoGraphQLClient.reactiveExecuteQuery(vehicleQuery).block();
 
-        List<Vehicle> result = response.extractValueAsObject("data.vehicles[*]", List.class);
+        assert response != null;
+        List result = response.extractValueAsObject("data.vehicles[*]", List.class);
         assertThat(result.size()).isNotZero();
     }
 }
