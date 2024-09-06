@@ -34,6 +34,9 @@ dependencies {
     implementation("com.redis.om:redis-om-spring:0.9.3")
     annotationProcessor("com.redis.om:redis-om-spring:0.9.3")
 
+    // Start up Redis automatically in development
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+
     // CSV
     implementation("com.google.guava:guava:33.2.1-jre")
     implementation("org.apache.commons:commons-csv:1.11.0")

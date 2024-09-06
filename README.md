@@ -9,11 +9,9 @@ State Department of Licensing (DOL):
 
 ## Running the project
 
-```shell
-# Start redis 
-docker-compose up -d
+The project uses Springs build in support to start up a Redis instance via the included `docker-compose.yml` file.
 
-# Run the application
+```shell
 ./gradlew bootRun
 ```
 
